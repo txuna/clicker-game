@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "game-redis.fullname" . }}-test-connection"
+  labels:
+    {{- include "game-redis.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "game-redis.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

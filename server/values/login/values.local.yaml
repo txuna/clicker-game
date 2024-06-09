@@ -1,0 +1,23 @@
+replicaCount: 3
+
+image:
+  repository: localhost:5001/login
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+service:
+  port: 9001
+  type: ClusterIP
+  targetPort: 9001
+
+config:
+  WEB_PORT: 9001
+  METRICS_PORT: 9100
+  LOG_LEVEL: debug
+  NATS_ADDR: nats.nats.svc.cluster.local:9003
+  LOGIN_SEARCH_TOPIC: "login.search"
+  LOGIN_STORE_TOPIC: "login.store"
+
+podLabels:
+  sidecar.istio.io/inject: "true" # 전송하는 쪽에서 Istio Envoy Proxy가 존재해야 함
