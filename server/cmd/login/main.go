@@ -41,13 +41,18 @@ func main() {
 		ls.Logger.Fatal().Err(err).Msg("could not connect to nats")
 	}
 
+	ls.Logger.Info().Msg("connect to mysql")
+
 	ls.MysqlConn, err = sql.Open("mysql", ls.MysqlAddr)
 	if err != nil {
 		ls.Logger.Fatal().Err(err).Msg("could not connect to mysql")
 	}
 
-	// nats 종료
+	ls.Logger.Info().Msg("connect to nats")
+
+	// nats & mysql 종료
 	defer ls.NatsConn.Close()
+	defer ls.MysqlConn.Close()
 
 	gin.SetMode("release")
 	r := gin.New()
