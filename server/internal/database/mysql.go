@@ -39,7 +39,7 @@ func FindAccount(db *sql.DB, userId string) (Account, error) {
 		return Account{}, err
 	}
 
-	err = stmt.QueryRow(userId).Scan(&account)
+	err = stmt.QueryRow(userId).Scan(&account.Id, &account.UserId, &account.UserPw)
 	if err != nil {
 		return Account{}, err
 	}

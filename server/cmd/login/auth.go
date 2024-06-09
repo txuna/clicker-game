@@ -31,8 +31,18 @@ func (ls *LoginServer) DoJoin(req *reqres.JoinRequest) int {
 
 func (ls *LoginServer) DoLogin(req *reqres.LoginRequest) (string, int) {
 
+	hasAccount, err := database.HasAccount(ls.MysqlConn, req.UserId)
+	if err != nil {
+		return "", reqres.ERROR_INVALID_REQUEST
+	}
+
+	if !hasAccount {
+		return "", reqres.ERROR_NOT_EXIST_USER
+	}
+
 	account, err := database.FindAccount(ls.MysqlConn, req.UserId)
 	if err != nil {
+		ls.Logger.Err(err).Msgf("could not find account: %s", req.UserId)
 		return "", reqres.ERROR_INTERNAL_SERVER
 	}
 
