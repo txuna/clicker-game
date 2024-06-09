@@ -59,13 +59,13 @@ remove-login:
 
 # 레디스 배포 
 deploy-game-redis:
-	@helm upgrade --install game-redis bitnami/redis -n redis -f values/game-redis/values.${STAGE}.yaml --create-namespace
+	@helm upgrade --install game-redis install/helm/game-redis-19.5.2 -n redis -f values/game-redis/values.${STAGE}.yaml --create-namespace
 
 remove-game-redis:
 	@helm uninstall game-redis -n redis
 
 deploy-log-redis:
-	@helm upgrade --install log-redis bitnami/redis -n redis -f values/log-redis/values.${STAGE}.yaml --create-namespace
+	@helm upgrade --install log-redis install/helm/log-redis-19.5.2 -n redis -f values/log-redis/values.${STAGE}.yaml --create-namespace
 
 remove-log-redis:
 	@helm uninstall log-redis -n redis
@@ -96,7 +96,7 @@ remove-game-client:
 
 # nats 배포
 deploy-nats:
-	@helm upgrade --install nats nats/nats -n nats -f values/nats/values.${STAGE}.yaml --create-namespace
+	@helm upgrade --install nats install/helm/nats-1.1.12 -n nats -f values/nats/values.${STAGE}.yaml --create-namespace
 
 remove-nats:
 	@helm uninstall nats -n nats
