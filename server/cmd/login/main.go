@@ -3,9 +3,11 @@ package main
 import (
 	"clicker/pkg/env"
 	"clicker/pkg/logger"
+	"database/sql"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 )
 
@@ -16,6 +18,9 @@ type LoginServer struct {
 	MetricsPort      string
 	LoginSearchTopic string
 	LoginStoreTopic  string
+	NatsConn         *nats.Conn
+	MysqlAddr        string
+	MysqlConn        *sql.DB
 }
 
 func main() {
@@ -26,7 +31,22 @@ func main() {
 		MetricsPort:      env.LookupStringEnv("METRICS_PORT", "9100"),
 		LoginSearchTopic: env.LookupStringEnv("LOGIN_SEARCH_TOPIC", "login.search"),
 		LoginStoreTopic:  env.LookupStringEnv("LOGIN_STORE_TOPIC", "login.store"),
+		MysqlAddr:        env.LookupStringEnv("MYSQL_ADDR", "myqsl.mysql.svc.cluster.local:3306"),
 	}
+
+	var err error
+	ls.NatsConn, err = nats.Connect(ls.NatsAddr)
+	if err != nil {
+		ls.Logger.Fatal().Err(err).Msg("could not connect to nats")
+	}
+
+	ls.MysqlConn, err = sql.Open("mysql", ls.MysqlAddr)
+	if err != nil {
+		ls.Logger.Fatal().Err(err).Msg("could not connect to mysql")
+	}
+
+	// nats 종료
+	defer ls.NatsConn.Close()
 
 	gin.SetMode("release")
 	r := gin.New()
@@ -34,6 +54,7 @@ func main() {
 	r.POST("/login", ls.OnLogin)
 	r.POST("/mining", ls.OnMining)
 	r.POST("/user", ls.OnUser)
+	r.POST("/join", ls.OnJoin)
 
 	ls.Logger.Info().Msgf("login server start on :%s", ls.WebPort)
 

@@ -67,6 +67,11 @@ spec:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-configmap
                   key: LOGIN_STORE_TOPIC
+            - name: MYSQL_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-configmap
+                  key: MYSQL_ADDR
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

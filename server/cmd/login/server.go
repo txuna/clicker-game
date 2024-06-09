@@ -1,15 +1,43 @@
 package main
 
 import (
+	"clicker/internal/mq"
 	"clicker/pkg/reqres"
+	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"github.com/nats-io/nats.go"
 )
 
 func (ls *LoginServer) OnProbe(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{})
+}
+
+func (ls *LoginServer) OnJoin(ctx *gin.Context) {
+	req := &reqres.JoinRequest{}
+	if err := ctx.BindJSON(req); err != nil {
+		ls.Logger.Err(err).Msg("invalid join request")
+		ctx.JSON(http.StatusOK, gin.H{
+			"error_code": reqres.ERROR_INVALID_REQUEST,
+		})
+
+		return
+	}
+
+	code := ls.DoJoin(req)
+	if code != reqres.ERROR_NONE {
+		ls.Logger.Info().Msgf("failed join: %d", code)
+		ctx.JSON(http.StatusOK, gin.H{
+			"error_code": code,
+		})
+
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"error_code": code,
+	})
 }
 
 func (ls *LoginServer) OnLogin(ctx *gin.Context) {
@@ -19,27 +47,52 @@ func (ls *LoginServer) OnLogin(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"error_code": reqres.ERROR_INVALID_REQUEST,
 		})
+
 		return
 	}
 
-	// 로그인 유저 검사 -> Nats request replay
-
-	// userid - token 저장 요청 -> Nats pub sub
-
-	// 로그인 성공
-	token, err := uuid.NewV7()
-	if err != nil {
-		ls.Logger.Err(err).Msg("could not generate token")
+	token, code := ls.DoLogin(req)
+	if code != reqres.ERROR_NONE {
+		ls.Logger.Info().Msgf("failed login: %d", code)
 		ctx.JSON(http.StatusOK, gin.H{
-			"error_code": reqres.ERROR_FAILED_GENERATE_TOKEN,
+			"error_code": code,
 		})
+
 		return
 	}
 
-	ls.Logger.Err(err).Msgf("Login user id{%s} - token{%s}", req.UserId, token.String())
+	data, err := json.Marshal(&mq.NatsLoginStoreRequest{
+		UserId: req.UserId,
+		Token:  token,
+	})
+
+	if err != nil {
+		ls.Logger.Err(err).Msg("could not marshal login store request")
+		ctx.JSON(http.StatusOK, gin.H{
+			"error_code": reqres.ERROR_INTERNAL_SERVER,
+		})
+
+		return
+	}
+
+	err = ls.NatsConn.PublishMsg(&nats.Msg{
+		Subject: ls.LoginStoreTopic,
+		Data:    data,
+	})
+
+	if err != nil {
+		ls.Logger.Err(err).Msg("could not publish login store")
+		ctx.JSON(http.StatusOK, gin.H{
+			"error_code": reqres.ERROR_INTERNAL_SERVER,
+		})
+
+		return
+	}
+
+	ls.Logger.Info().Msgf("Login user id{%s} - token{%s}", req.UserId, token)
 	ctx.JSON(http.StatusOK, gin.H{
 		"error_code": reqres.ERROR_NONE,
-		"token":      token.String(),
+		"token":      token,
 	})
 }
 
