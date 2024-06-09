@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/nats-io/nats.go"
 	"github.com/rs/zerolog"
 )
