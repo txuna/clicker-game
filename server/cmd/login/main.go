@@ -27,7 +27,7 @@ func main() {
 	ls := &LoginServer{
 		Logger:           logger.NewLogger(env.LookupStringEnv("LOG_LEVEL", "devbug")),
 		WebPort:          env.LookupStringEnv("WEB_PORT", "9001"),
-		NatsAddr:         env.LookupStringEnv("NATS_ADDR", "nats.nats.svc.cluster.local:9003"),
+		NatsAddr:         env.LookupStringEnv("NATS_ADDR", "nats.nats.svc.cluster.local:4222"),
 		MetricsPort:      env.LookupStringEnv("METRICS_PORT", "9100"),
 		LoginSearchTopic: env.LookupStringEnv("LOGIN_SEARCH_TOPIC", "login.search"),
 		LoginStoreTopic:  env.LookupStringEnv("LOGIN_STORE_TOPIC", "login.store"),

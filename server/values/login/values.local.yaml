@@ -15,7 +15,7 @@ config:
   WEB_PORT: 9001
   METRICS_PORT: 9100
   LOG_LEVEL: debug
-  NATS_ADDR: nats.nats.svc.cluster.local:9003
+  NATS_ADDR: nats.nats.svc.cluster.local:4222
   LOGIN_SEARCH_TOPIC: "login.search"
   LOGIN_STORE_TOPIC: "login.store"
   MYSQL_ADDR: "root:1234qwer!@tcp(myqsl.mysql.svc.cluster.local:3306)/clicker-game"

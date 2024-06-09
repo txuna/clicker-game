@@ -51,7 +51,7 @@ repo-add:
 # 로그인 서버 배포
 push-login:
 	@docker build -t ${REGISTY}/login:latest -f cmd/login/Dockerfile .
-	@docker push -t ${REGISTY}/login:latest
+	@docker push ${REGISTY}/login:latest
 
 deploy-login:
 	@helm upgrade --install login install/helm/login -n login -f values/login/values.${STAGE}.yaml --create-namespace
@@ -75,7 +75,7 @@ remove-log-redis:
 # 레디스 로깅
 push-log-client:
 	@docker build -t ${REGISTY}/log-client:latest -f cmd/log-client/Dockerfile .
-	@docker push -t ${REGISTY}/log-client:latest
+	@docker push ${REGISTY}/log-client:latest
 
 deploy-log-client:
 	@helm upgrade --install log-client install/helm/log-client -n redis-client -f values/log-client/values.${STAGE}.yaml --create-namespace
@@ -86,7 +86,7 @@ remove-log-client:
 # 레디스 게임
 push-game-client:
 	@docker build -t ${REGISTY}game-client:latest -f cmd/game-client/Dockerfile .
-	@docker push -t ${REGISTY}/game-client:latest
+	@docker push ${REGISTY}/game-client:latest
 
 deploy-game-client:
 	@helm upgrade --install game-client install/helm/game-client -n redis-client -f values/game-client/values.${STAGE}.yaml --create-namespace
