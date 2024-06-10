@@ -35,6 +35,8 @@ func (ls *LoginServer) OnJoin(ctx *gin.Context) {
 		return
 	}
 
+	ls.Logger.Info().Msgf("Join user(%s)", req.UserId)
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"error_code": code,
 	})
@@ -94,12 +96,4 @@ func (ls *LoginServer) OnLogin(ctx *gin.Context) {
 		"error_code": reqres.ERROR_NONE,
 		"token":      token,
 	})
-}
-
-func (ls *LoginServer) OnMining(ctx *gin.Context) {
-
-}
-
-func (ls *LoginServer) OnUser(ctx *gin.Context) {
-
 }

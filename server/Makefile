@@ -25,15 +25,13 @@ deploy-base-all:
 	@make repo-add 
 	@make deploy-argo 
 	@make deploy-nats 
-	@make deploy-game-redis 
-	@make deploy-log-redis
+	@make deploy-redis 
 	@make deploy-mysql
 
 remove-base-all:
 	@make remove-argo 
 	@make remove-nats 
-	@make remove-game-redis 
-	@make remove-log-redis
+	@make remove-redis 
 	@make remove-mysql
 
 deploy-app-all:
@@ -60,39 +58,22 @@ remove-login:
 	@helm uninstall login -n login
 
 # 레디스 배포 
-deploy-game-redis:
-	@helm upgrade --install game-redis install/helm/game-redis-19.5.2 -n redis -f values/game-redis/values.${STAGE}.yaml --create-namespace
+deploy-redis:
+	@helm upgrade --install redis install/helm/redis-19.5.2 -n redis -f values/redis/values.${STAGE}.yaml --create-namespace
 
-remove-game-redis:
-	@helm uninstall game-redis -n redis
+remove-redis:
+	@helm uninstall redis -n redis
 
-deploy-log-redis:
-	@helm upgrade --install log-redis install/helm/log-redis-19.5.2 -n redis -f values/log-redis/values.${STAGE}.yaml --create-namespace
+# 레디스 클라이언트
+push-redis-client:
+	@docker build -t ${REGISTY}/redis-client:latest -f cmd/redis-client/Dockerfile .
+	@docker push ${REGISTY}/redis-client:latest
 
-remove-log-redis:
-	@helm uninstall log-redis -n redis
+deploy-redis-client:
+	@helm upgrade --install redis-client install/helm/redis-client -n redis -f values/redis-client/values.${STAGE}.yaml --create-namespace
 
-# 레디스 로깅
-push-log-client:
-	@docker build -t ${REGISTY}/log-client:latest -f cmd/log-client/Dockerfile .
-	@docker push ${REGISTY}/log-client:latest
-
-deploy-log-client:
-	@helm upgrade --install log-client install/helm/log-client -n redis-client -f values/log-client/values.${STAGE}.yaml --create-namespace
-
-remove-log-client:
-	@helm uninstall log-client -n redis-client
-
-# 레디스 게임
-push-game-client:
-	@docker build -t ${REGISTY}game-client:latest -f cmd/game-client/Dockerfile .
-	@docker push ${REGISTY}/game-client:latest
-
-deploy-game-client:
-	@helm upgrade --install game-client install/helm/game-client -n redis-client -f values/game-client/values.${STAGE}.yaml --create-namespace
-
-remove-game-client:
-	@helm uninstall game-client -n redis-client
+remove-redis-client:
+	@helm uninstall redis-client -n redis
 
 # 게임 서버 배포
 

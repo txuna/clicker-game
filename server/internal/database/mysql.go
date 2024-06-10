@@ -12,6 +12,39 @@ type Account struct {
 	UserPw string
 }
 
+func DeleteAccount(db *sql.DB, userid string) error {
+	query := "DELETE FROM `accounts` where userid = ?;"
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(userid)
+	return err
+}
+
+func DeletePlayer(db *sql.DB, playerId int) error {
+	query := "DELETE FROM `players` where player_id = ?;"
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(playerId)
+	return err
+}
+
+func InsertPlayer(db *sql.DB, playerId, coin int) error {
+	query := "INSERT INTO `players` (player_id, coin) VALUES (?, ?);"
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(playerId, coin)
+	return err
+}
+
 func InsertAccount(db *sql.DB, userId, userPw string) (int64, error) {
 	hashPw, err := hashAndSalt([]byte(userPw))
 	if err != nil {
@@ -87,9 +120,5 @@ func comparePasswords(hashedPwd string, plainPwd []byte) bool {
 	// will be a string so we'll need to convert it to a byte slice
 	byteHash := []byte(hashedPwd)
 	err := bcrypt.CompareHashAndPassword(byteHash, plainPwd)
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }

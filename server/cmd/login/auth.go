@@ -24,7 +24,12 @@ func (ls *LoginServer) DoJoin(req *reqres.JoinRequest) int {
 	}
 
 	// player data 생성
-	_ = idx
+	err = database.InsertPlayer(ls.MysqlConn, int(idx), 0)
+	if err != nil {
+		// rollback
+		database.DeleteAccount(ls.MysqlConn, req.UserId)
+		return reqres.ERROR_INTERNAL_SERVER
+	}
 
 	return reqres.ERROR_NONE
 }
