@@ -36,9 +36,13 @@ remove-base-all:
 
 deploy-app-all:
 	@make deploy-login
+	@make deploy-redis-client 
+	@make deploy-game 
 
 remove-app-all:
 	@make remove-login
+	@make remove-game
+	@make remove-redis-client
 
 repo-add:
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
