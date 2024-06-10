@@ -12,6 +12,17 @@ make kind-create
 
 make deploy-base-all
 make deploy-app-all
+
+# kubectl port-forward svc/mysql -n mysql 3307:3306
+kubectl port-forward svc/login -n login 9001:9001
+kubectl port-forward svc/game -n game 9003:9003
+```
+
+### TEST
+```bash
+cd clicker-game/client/test_client
+go build
+./client
 ```
 
 ### DEMO
