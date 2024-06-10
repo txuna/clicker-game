@@ -7,9 +7,15 @@ import (
 )
 
 type Account struct {
-	Id     int64
+	Id     int
 	UserId string
 	UserPw string
+}
+
+type Player struct {
+	PlayerId int
+	Coin     int
+	MaxCoin  int
 }
 
 func DeleteAccount(db *sql.DB, userid string) error {
@@ -34,14 +40,14 @@ func DeletePlayer(db *sql.DB, playerId int) error {
 	return err
 }
 
-func InsertPlayer(db *sql.DB, playerId, coin int) error {
-	query := "INSERT INTO `players` (player_id, coin) VALUES (?, ?);"
+func InsertPlayer(db *sql.DB, playerId, coin, maxCoin int) error {
+	query := "INSERT INTO `players` (player_id, coin, max_coin) VALUES (?, ?, ?);"
 	stmt, err := db.Prepare(query)
 	if err != nil {
 		return err
 	}
 
-	_, err = stmt.Exec(playerId, coin)
+	_, err = stmt.Exec(playerId, coin, maxCoin)
 	return err
 }
 
@@ -78,6 +84,36 @@ func FindAccount(db *sql.DB, userId string) (Account, error) {
 	}
 
 	return account, err
+}
+
+func FindPlayer(db *sql.DB, playerId int) (Player, error) {
+	var player Player
+	stmt, err := db.Prepare("SELECT * FROM players where player_id = ?")
+	if err != nil {
+		return Player{}, err
+	}
+
+	err = stmt.QueryRow(playerId).Scan(&player.PlayerId, &player.Coin, &player.MaxCoin)
+	if err != nil {
+		return Player{}, err
+	}
+
+	return player, nil
+}
+
+func UpdatePlayerCoin(db *sql.DB, playerId, coin int) error {
+	stmt, err := db.Prepare("UPDATE players SET coin = coin + ? where player_id = ?")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(coin, playerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func HasAccount(db *sql.DB, userId string) (bool, error) {

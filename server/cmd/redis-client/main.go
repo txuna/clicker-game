@@ -11,16 +11,18 @@ import (
 )
 
 type GameClient struct {
-	NatsConn        *nats.Conn
-	RedisConn       *redis.Client
-	LoginStoreTopic string
-	Logger          zerolog.Logger
+	NatsConn         *nats.Conn
+	RedisConn        *redis.Client
+	LoginStoreTopic  string
+	LoginSearchTopic string
+	Logger           zerolog.Logger
 }
 
 func main() {
 	gc := &GameClient{
-		LoginStoreTopic: env.LookupStringEnv("LOGIN_STORE_TOPIC", "login.store"),
-		Logger:          logger.NewLogger(env.LookupStringEnv("LOG_LEVEL", "debug")),
+		LoginStoreTopic:  env.LookupStringEnv("LOGIN_STORE_TOPIC", "login.store"),
+		LoginSearchTopic: env.LookupStringEnv("LOGIN_SEARCH_TOPIC", "login.search"),
+		Logger:           logger.NewLogger(env.LookupStringEnv("LOG_LEVEL", "debug")),
 	}
 
 	var err error
@@ -50,6 +52,11 @@ func main() {
 	_, err = gc.NatsConn.QueueSubscribe(gc.LoginStoreTopic, "login.store", gc.OnLoginStore)
 	if err != nil {
 		gc.Logger.Fatal().Err(err).Msg("could not subscribe login.store")
+	}
+
+	_, err = gc.NatsConn.QueueSubscribe(gc.LoginSearchTopic, "login.search", gc.OnLoginSearch)
+	if err != nil {
+		gc.Logger.Fatal().Err(err).Msg("could not subscribe login.search")
 	}
 
 	gc.Logger.Info().Msg("start game client redis")

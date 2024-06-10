@@ -94,6 +94,7 @@ func (ls *LoginServer) OnLogin(ctx *gin.Context) {
 	ls.Logger.Info().Msgf("Login user id{%s} - token{%s}", req.UserId, token)
 	ctx.JSON(http.StatusOK, gin.H{
 		"error_code": reqres.ERROR_NONE,
+		"user_id":    req.UserId,
 		"token":      token,
 	})
 }

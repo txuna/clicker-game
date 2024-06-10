@@ -1,7 +1,12 @@
 package mq
 
+type NatsLoginSearchRequest struct {
+	UserId string `json:"user_id"`
+	Token  string `json:"token"`
+}
+
 type NatsLoginSearchResponse struct {
-	ErrorCode int
+	Result bool `json:"result"`
 }
 
 type NatsLoginStoreRequest struct {

@@ -23,5 +23,5 @@ func Get(redisClient *redis.Client, key string) (string, error) {
 		return "", value.Err()
 	}
 
-	return value.String(), nil
+	return value.Val(), nil
 }

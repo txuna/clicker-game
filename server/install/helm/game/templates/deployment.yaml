@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "redis-client.fullname" . }}
+  name: {{ include "game.fullname" . }}
   labels:
-    {{- include "redis-client.labels" . | nindent 4 }}
+    {{- include "game.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "redis-client.selectorLabels" . | nindent 6 }}
+      {{- include "game.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "redis-client.labels" . | nindent 8 }}
+        {{- include "game.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "redis-client.serviceAccountName" . }}
+      serviceAccountName: {{ include "game.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -37,26 +37,31 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: LOGIN_STORE_TOPIC
+            - name: WEB_PORT
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-configmap
-                  key: LOGIN_STORE_TOPIC
-            - name: LOG_LEVEL
+                  key: WEB_PORT
+            - name: METRICS_PORT
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-configmap
-                  key: LOG_LEVEL
+                  key: METRICS_PORT
             - name: NATS_ADDR
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-configmap
                   key: NATS_ADDR
-            - name: REDIS_ADDR
+            - name: MYSQL_ADDR
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Release.Name }}-configmap
-                  key: REDIS_ADDR
+                  key: MYSQL_ADDR
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-configmap
+                  key: LOG_LEVEL
             - name: LOGIN_SEARCH_TOPIC
               valueFrom:
                 configMapKeyRef:

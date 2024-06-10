@@ -7,10 +7,15 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	MAX_COIN = 5000
+)
+
 func (ls *LoginServer) DoJoin(req *reqres.JoinRequest) int {
 
 	hasAccount, err := database.HasAccount(ls.MysqlConn, req.UserId)
 	if err != nil {
+		ls.Logger.Err(err).Msg("HasAccount return err")
 		return reqres.ERROR_INVALID_REQUEST
 	}
 
@@ -20,13 +25,15 @@ func (ls *LoginServer) DoJoin(req *reqres.JoinRequest) int {
 
 	idx, err := database.InsertAccount(ls.MysqlConn, req.UserId, req.UserPw)
 	if err != nil {
+		ls.Logger.Err(err).Msg("InsertAccount return err")
 		return reqres.ERROR_INTERNAL_SERVER
 	}
 
 	// player data 생성
-	err = database.InsertPlayer(ls.MysqlConn, int(idx), 0)
+	err = database.InsertPlayer(ls.MysqlConn, int(idx), 0, MAX_COIN)
 	if err != nil {
 		// rollback
+		ls.Logger.Err(err).Msg("InsertPlayer return err. will be rollback")
 		database.DeleteAccount(ls.MysqlConn, req.UserId)
 		return reqres.ERROR_INTERNAL_SERVER
 	}

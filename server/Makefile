@@ -76,6 +76,15 @@ remove-redis-client:
 	@helm uninstall redis-client -n redis
 
 # 게임 서버 배포
+push-game: 
+	@docker build -t ${REGISTY}/game:latest -f cmd/game/Dockerfile .
+	@docker push ${REGISTY}/game:latest
+
+deploy-game:
+	@helm upgrade --install game install/helm/game -n game -f values/game/values.${STAGE}.yaml --create-namespace
+
+remove-game:
+	@helm uninstall game -n game
 
 # nats 배포
 deploy-nats:
