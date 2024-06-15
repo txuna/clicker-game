@@ -27,12 +27,14 @@ deploy-base-all:
 	@make deploy-nats 
 	@make deploy-redis 
 	@make deploy-mysql
+	@make deploy-loki-stack
 
 remove-base-all:
 	@make remove-argo 
 	@make remove-nats 
 	@make remove-redis 
 	@make remove-mysql
+	@make remove-loki-stack
 
 deploy-app-all:
 	@make deploy-login
@@ -48,7 +50,17 @@ repo-add:
 	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@helm repo add nats https://nats-io.github.io/k8s/helm/charts/
 	@helm repo add argo https://argoproj.github.io/argo-helm
+	@helm repo add grafana https://grafana.github.io/helm-charts
 	@helm repo update
+
+print-grafana-password:
+	@kubectl get secret --namespace loki-stack loki-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+deploy-loki-stack:
+	@helm upgrade --install loki --namespace=loki-stack grafana/loki-stack --set grafana.enabled=true --create-namespace 
+
+remove-loki-stack:
+	@helm uninstall loki -n loki-stack
 
 # 로그인 서버 배포
 push-login:
