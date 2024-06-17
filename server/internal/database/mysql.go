@@ -13,9 +13,9 @@ type Account struct {
 }
 
 type Player struct {
-	PlayerId int
-	Coin     int
-	MaxCoin  int
+	PlayerId int `json:"player_id"`
+	Coin     int `json:"coin"`
+	MaxCoin  int `json:"max_coin"`
 }
 
 func DeleteAccount(db *sql.DB, userid string) error {
@@ -24,6 +24,8 @@ func DeleteAccount(db *sql.DB, userid string) error {
 	if err != nil {
 		return err
 	}
+
+	defer stmt.Close()
 
 	_, err = stmt.Exec(userid)
 	return err
@@ -36,6 +38,8 @@ func DeletePlayer(db *sql.DB, playerId int) error {
 		return err
 	}
 
+	defer stmt.Close()
+
 	_, err = stmt.Exec(playerId)
 	return err
 }
@@ -46,6 +50,8 @@ func InsertPlayer(db *sql.DB, playerId, coin, maxCoin int) error {
 	if err != nil {
 		return err
 	}
+
+	defer stmt.Close()
 
 	_, err = stmt.Exec(playerId, coin, maxCoin)
 	return err
@@ -78,6 +84,8 @@ func FindAccount(db *sql.DB, userId string) (Account, error) {
 		return Account{}, err
 	}
 
+	defer stmt.Close()
+
 	err = stmt.QueryRow(userId).Scan(&account.Id, &account.UserId, &account.UserPw)
 	if err != nil {
 		return Account{}, err
@@ -93,6 +101,8 @@ func FindPlayer(db *sql.DB, playerId int) (Player, error) {
 		return Player{}, err
 	}
 
+	defer stmt.Close()
+
 	err = stmt.QueryRow(playerId).Scan(&player.PlayerId, &player.Coin, &player.MaxCoin)
 	if err != nil {
 		return Player{}, err
@@ -101,12 +111,45 @@ func FindPlayer(db *sql.DB, playerId int) (Player, error) {
 	return player, nil
 }
 
+func LoadPlayers(db *sql.DB) ([]Player, error) {
+	stmt, err := db.Prepare("SELECT * FROM players")
+	if err != nil {
+		return []Player{}, err
+	}
+
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		return []Player{}, err
+	}
+
+	defer rows.Close()
+
+	var players []Player
+	for rows.Next() {
+		var p Player
+		if err := rows.Scan(&p.PlayerId, &p.Coin, &p.MaxCoin); err != nil {
+			return nil, err
+		}
+		players = append(players, p)
+	}
+
+	if err := rows.Err(); err != nil {
+		return []Player{}, err
+	}
+
+	return players, nil
+}
+
 func UpdatePlayerCoin(db *sql.DB, playerId, coin int) error {
 	stmt, err := db.Prepare("UPDATE players SET coin = coin + ? where player_id = ?")
 
 	if err != nil {
 		return err
 	}
+
+	defer stmt.Close()
 
 	_, err = stmt.Exec(coin, playerId)
 	if err != nil {
@@ -121,6 +164,8 @@ func HasAccount(db *sql.DB, userId string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
+
+	defer stmt.Close()
 
 	var has bool
 	err = stmt.QueryRow(userId).Scan(&has)

@@ -49,6 +49,7 @@ func main() {
 	r.GET("/", gs.OnProbe)
 	r.POST("/mining", gs.OnMining)
 	r.POST("/user", gs.OnUser)
+	r.POST("/ranking", gs.OnRanking)
 
 	gs.Logger.Info().Msg("start game server")
 

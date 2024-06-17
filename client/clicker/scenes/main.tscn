@@ -1,0 +1,187 @@
+[gd_scene load_steps=13 format=3 uid="uid://c62jn5alg05uq"]
+
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_ghw24"]
+[ext_resource type="Texture2D" uid="uid://5gyqklogto01" path="res://assets/ui/png2/Panel/Window/Large@2x.png" id="2_mfiqp"]
+[ext_resource type="FontFile" uid="uid://b8ngxow0a1cjh" path="res://assets/HSSanTokki2.0(2024).ttf" id="3_yh7td"]
+[ext_resource type="Texture2D" uid="uid://c6l7144mojfut" path="res://assets/ui/png2/ProgressBar/Line@2x.png" id="4_2l2t1"]
+[ext_resource type="Texture2D" uid="uid://b82klcssit086" path="res://assets/ui/png2/ProgressBar/Background@2x.png" id="5_1nsev"]
+[ext_resource type="Texture2D" uid="uid://c0a2t7jsx2g04" path="res://assets/ui/png2/Button/Rect-Medium/Default@2x.png" id="8_7gi6h"]
+[ext_resource type="Texture2D" uid="uid://c8gcy3bmaq0q0" path="res://assets/ui/png2/Button/Rect-Medium/Hover@2x.png" id="9_m52a2"]
+[ext_resource type="PackedScene" uid="uid://n7vdrt2tx14d" path="res://scenes/panel.tscn" id="9_oo5q3"]
+[ext_resource type="FontFile" uid="uid://pioshvt1vf6e" path="res://assets/ui/png2/Button/Rect-Medium/HSSanTokki2.0(2024).ttf" id="10_i0xv1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0eoia"]
+bg_color = Color(0.00392157, 0.603922, 0.878431, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_474hx"]
+bg_color = Color(0.00392157, 0.603922, 0.878431, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d5u20"]
+bg_color = Color(0.308648, 0.669747, 0.779513, 1)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_ghw24")
+
+[node name="Large_2x" type="Sprite2D" parent="."]
+position = Vector2(600, 400)
+texture = ExtResource("2_mfiqp")
+
+[node name="Label" type="Label" parent="."]
+modulate = Color(0, 0, 0, 0.152941)
+offset_left = 116.0
+offset_top = 271.0
+offset_right = 1126.0
+offset_bottom = 400.0
+theme_override_fonts/font = ExtResource("3_yh7td")
+theme_override_font_sizes/font_size = 128
+text = "Mine the Coin"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LevelBar" type="TextureProgressBar" parent="."]
+offset_left = 129.0
+offset_top = 682.0
+offset_right = 1089.0
+offset_bottom = 734.0
+value = 50.0
+texture_under = ExtResource("4_2l2t1")
+texture_progress = ExtResource("5_1nsev")
+
+[node name="left" type="Marker2D" parent="."]
+position = Vector2(51, 284)
+
+[node name="right" type="Marker2D" parent="."]
+position = Vector2(1129, 283)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Control" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="HBoxContainer/Control"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 23.0
+offset_right = 249.0
+offset_bottom = 143.0
+texture_normal = ExtResource("8_7gi6h")
+texture_pressed = ExtResource("9_m52a2")
+texture_hover = ExtResource("9_m52a2")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="HBoxContainer/Control/TextureButton"]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 25.0
+offset_right = 193.0
+offset_bottom = 90.0
+theme_override_fonts/font = ExtResource("10_i0xv1")
+theme_override_font_sizes/font_size = 64
+text = "Store"
+
+[node name="Control" type="Control" parent="HBoxContainer/Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 271.0
+offset_right = 271.0
+
+[node name="TextureButton" type="TextureButton" parent="HBoxContainer/Control/Control"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 23.0
+offset_right = 249.0
+offset_bottom = 143.0
+texture_normal = ExtResource("8_7gi6h")
+texture_pressed = ExtResource("9_m52a2")
+texture_hover = ExtResource("9_m52a2")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="HBoxContainer/Control/Control/TextureButton"]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 23.0
+offset_right = 177.0
+offset_bottom = 88.0
+theme_override_fonts/font = ExtResource("10_i0xv1")
+theme_override_font_sizes/font_size = 64
+text = "Info"
+
+[node name="Control" type="Control" parent="HBoxContainer/Control/Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 536.0
+offset_right = 536.0
+
+[node name="TextureButton" type="TextureButton" parent="HBoxContainer/Control/Control/Control"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 23.0
+offset_right = 371.0
+offset_bottom = 143.0
+texture_normal = ExtResource("8_7gi6h")
+texture_pressed = ExtResource("9_m52a2")
+texture_hover = ExtResource("9_m52a2")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="HBoxContainer/Control/Control/Control/TextureButton"]
+layout_mode = 0
+offset_left = 43.0
+offset_top = 23.0
+offset_right = 177.0
+offset_bottom = 88.0
+theme_override_fonts/font = ExtResource("10_i0xv1")
+theme_override_font_sizes/font_size = 64
+text = "Settings"
+
+[node name="MiningBtn" type="Button" parent="."]
+offset_left = 430.0
+offset_top = 495.0
+offset_right = 761.0
+offset_bottom = 627.0
+theme_override_fonts/font = ExtResource("10_i0xv1")
+theme_override_font_sizes/font_size = 72
+theme_override_styles/normal = SubResource("StyleBoxFlat_0eoia")
+theme_override_styles/hover = SubResource("StyleBoxFlat_474hx")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_d5u20")
+text = "Mining"
+
+[node name="Panel" parent="." instance=ExtResource("9_oo5q3")]
+visible = false
+
+[node name="CoinLabel" type="Label" parent="."]
+offset_left = 17.0
+offset_top = 170.0
+offset_right = 117.0
+offset_bottom = 219.0
+theme_override_fonts/font = ExtResource("10_i0xv1")
+theme_override_font_sizes/font_size = 48
+text = "Coin :"
+
+[node name="CoinValue" type="Label" parent="."]
+offset_left = 151.0
+offset_top = 171.0
+offset_right = 483.0
+offset_bottom = 220.0
+theme_override_fonts/font = ExtResource("10_i0xv1")
+theme_override_font_sizes/font_size = 48
+text = "0/5000"
+
+[connection signal="pressed" from="MiningBtn" to="." method="_on_mining_pressed"]
+[connection signal="btn_click" from="Panel" to="." method="_on_panel_btn_click"]

@@ -48,6 +48,21 @@ func (gs *GameServer) VerifyToken(userId, token string) int {
 	return reqres.ERROR_NONE
 }
 
+func (gs *GameServer) DoLoadRanking(req *reqres.RankingRequest) ([]database.Player, int) {
+	if ret := gs.VerifyToken(req.UserId, req.Token); ret != reqres.ERROR_NONE {
+		gs.Logger.Info().Msgf("failed verify token %s", req.UserId)
+		return []database.Player{}, ret
+	}
+
+	players, err := database.LoadPlayers(gs.MysqlConn)
+	if err != nil {
+		gs.Logger.Err(err).Msg("could not load players")
+		return players, reqres.ERROR_INTERNAL_SERVER
+	}
+
+	return players, reqres.ERROR_NONE
+}
+
 func (gs *GameServer) DoLoadUser(req *reqres.UserRequest) (database.Player, int) {
 	if ret := gs.VerifyToken(req.UserId, req.Token); ret != reqres.ERROR_NONE {
 		gs.Logger.Info().Msgf("failed verify token %s", req.UserId)

@@ -1,0 +1,114 @@
+[gd_scene load_steps=7 format=3 uid="uid://by4qfahj0ougi"]
+
+[ext_resource type="Script" path="res://scenes/title.gd" id="1_d0ng7"]
+[ext_resource type="Texture2D" uid="uid://c8gcy3bmaq0q0" path="res://assets/ui/png2/Button/Rect-Medium/Hover@2x.png" id="2_q50d6"]
+[ext_resource type="FontFile" uid="uid://b8ngxow0a1cjh" path="res://assets/HSSanTokki2.0(2024).ttf" id="3_4s4v8"]
+[ext_resource type="Texture2D" uid="uid://c0a2t7jsx2g04" path="res://assets/ui/png2/Button/Rect-Medium/Default@2x.png" id="3_pacgd"]
+[ext_resource type="FontFile" uid="uid://pioshvt1vf6e" path="res://assets/ui/png2/Button/Rect-Medium/HSSanTokki2.0(2024).ttf" id="5_eglam"]
+[ext_resource type="PackedScene" uid="uid://n7vdrt2tx14d" path="res://scenes/panel.tscn" id="6_gvuxn"]
+
+[node name="Title" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1200.0
+offset_bottom = -800.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_d0ng7")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(1200, 800)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.47451, 0.803922, 0.909804, 1)
+
+[node name="Contents" type="Label" parent="."]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 114.0
+offset_right = 1048.0
+offset_bottom = 247.0
+theme_override_fonts/font = ExtResource("3_4s4v8")
+theme_override_font_sizes/font_size = 92
+text = "Online Clicker Game"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureButton2" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 623.0
+offset_top = 600.0
+offset_right = 931.0
+offset_bottom = 748.0
+texture_normal = ExtResource("3_pacgd")
+texture_pressed = ExtResource("2_q50d6")
+texture_hover = ExtResource("2_q50d6")
+texture_disabled = ExtResource("2_q50d6")
+
+[node name="LoginBtn" type="Label" parent="TextureButton2"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 9.0
+offset_right = 305.0
+offset_bottom = 142.0
+theme_override_fonts/font = ExtResource("3_4s4v8")
+theme_override_font_sizes/font_size = 84
+text = "회원가입"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 304.0
+offset_top = 600.0
+offset_right = 612.0
+offset_bottom = 748.0
+texture_normal = ExtResource("3_pacgd")
+texture_pressed = ExtResource("2_q50d6")
+texture_hover = ExtResource("2_q50d6")
+texture_disabled = ExtResource("2_q50d6")
+
+[node name="LoginBtn" type="Label" parent="TextureButton"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 9.0
+offset_right = 305.0
+offset_bottom = 142.0
+theme_override_fonts/font = ExtResource("3_4s4v8")
+theme_override_font_sizes/font_size = 84
+text = "로그인"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="userIdEditor" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 303.0
+offset_top = 342.0
+offset_right = 930.0
+offset_bottom = 433.0
+theme_override_fonts/font = ExtResource("5_eglam")
+theme_override_font_sizes/font_size = 48
+placeholder_text = "write the username"
+alignment = 1
+
+[node name="userPwEditor" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 304.0
+offset_top = 478.0
+offset_right = 931.0
+offset_bottom = 569.0
+theme_override_fonts/font = ExtResource("5_eglam")
+theme_override_font_sizes/font_size = 48
+placeholder_text = "write the password"
+alignment = 1
+virtual_keyboard_type = 6
+secret = true
+
+[node name="Panel" parent="." instance=ExtResource("6_gvuxn")]
+
+[connection signal="pressed" from="TextureButton2" to="." method="_on_texture_join_pressed"]
+[connection signal="pressed" from="TextureButton" to="." method="_on_texture_login_pressed"]
+[connection signal="btn_click" from="Panel" to="." method="_on_panel_btn_click"]

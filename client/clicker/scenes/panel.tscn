@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://n7vdrt2tx14d"]
+
+[ext_resource type="Script" path="res://scenes/panel.gd" id="1_tokoe"]
+[ext_resource type="FontFile" uid="uid://pioshvt1vf6e" path="res://assets/ui/png2/Button/Rect-Medium/HSSanTokki2.0(2024).ttf" id="1_vdr05"]
+
+[node name="Panel" type="CanvasLayer"]
+script = ExtResource("1_tokoe")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 258.0
+offset_top = 213.0
+offset_right = 985.0
+offset_bottom = 618.0
+color = Color(0.238468, 0.554563, 1, 1)
+
+[node name="Title" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_right = 723.0
+offset_bottom = 95.0
+theme_override_fonts/font = ExtResource("1_vdr05")
+theme_override_font_sizes/font_size = 72
+text = "알림창"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="ColorRect"]
+layout_mode = 0
+offset_left = 233.0
+offset_top = 283.0
+offset_right = 497.0
+offset_bottom = 383.0
+theme_override_fonts/font = ExtResource("1_vdr05")
+theme_override_font_sizes/font_size = 64
+text = "확인"
+
+[node name="Content" type="Label" parent="ColorRect"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 96.0
+offset_right = 704.0
+offset_bottom = 258.0
+theme_override_fonts/font = ExtResource("1_vdr05")
+theme_override_font_sizes/font_size = 48
+text = "1231233"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="ColorRect/Button" to="." method="_on_button_pressed"]

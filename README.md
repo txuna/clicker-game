@@ -10,10 +10,18 @@ git clone https://github.com/txuna/clicker-game.git
 cd clicker-game/server
 make kind-create
 
+make push-login stage=local
+make push-game stage=local
+make push-redis-client stage=local
+
 make deploy-base-all
 make deploy-app-all
 
-# kubectl port-forward svc/mysql -n mysql 3307:3306
+# init mysql
+mysql -h 127.0.0.1 -P 3307 -u root -p1234qwer! clicker-game < clicker-game.sql
+
+# port-forward
+kubectl port-forward svc/mysql -n mysql 3307:3306
 kubectl port-forward svc/login -n login 9001:9001
 kubectl port-forward svc/game -n game 9003:9003
 ```

@@ -39,3 +39,19 @@ type MiningResponse struct {
 	ErrorCode int `json:"error_code"`
 	Coin      int `json:"coin"`
 }
+
+type RankingRequest struct {
+	UserId string `json:"user_id"`
+	Token  string `json:"token"`
+}
+
+type Player struct {
+	PlayerId int `json:"player_id"`
+	Coin     int `json:"coin"`
+	MaxCoin  int `json:"max_coin"`
+}
+
+type RankingResponse struct {
+	ErrorCode int      `json:"error_code"`
+	Players   []Player `json:"players"`
+}
