@@ -1,0 +1,25 @@
+
+
+replicaCount: 2
+
+image:
+  repository: txuna/game
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+service:
+  port: 9003
+  type: ClusterIP
+  targetPort: 9003
+
+config:
+  WEB_PORT: 9003
+  METRICS_PORT: 9100
+  LOG_LEVEL: debug
+  NATS_ADDR: nats.nats.svc.cluster.local:4222
+  LOGIN_SEARCH_TOPIC: "login.search"
+  MYSQL_ADDR: "root:1234qwer!@tcp(mysql.mysql.svc.cluster.local:3306)/clicker-game"
+
+podLabels:
+  sidecar.istio.io/inject: "true" # 전송하는 쪽에서 Istio Envoy Proxy가 존재해야 함

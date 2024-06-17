@@ -6,8 +6,8 @@ REGISTY?=localhost:5001
 
 ifeq ($(STAGE), local)
 	REGISTY=localhost:5001
-else ifeq ($(STAGE), dev)
-	REGISTY=localhost:5001
+else ifeq ($(STAGE), live)
+	REGISTY=txuna
 endif
 
 kind-create:
