@@ -180,10 +180,11 @@ func run(userid, password string) {
 
 	for i := 0; i < 30; i++ {
 		start := time.Now()
-		log.Printf("mining: %v\n", mining(userid, v.Token))
+		res := mining(userid, v.Token)
+		log.Printf("mining: %d coin - userid: %s\n", res.Coin, userid)
 		elapsed := time.Since(start)
 		store(elapsed)
-		fmt.Printf("Execution time: %s\n", elapsed)
+		//fmt.Printf("Execution time: %s\n", elapsed)
 	}
 }
 
