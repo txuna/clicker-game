@@ -123,6 +123,8 @@ deploy-argo:
 remove-argo:
 	@helm uninstall argocd -n argocd
 
+init-mysql:
+	@mysql -h 127.0.0.1 -P 3307 -u root -p1234qwer! clicker-game < sql/clicker-game.sql
 
 deploy-debug:
 	kubectl apply -f https://k8s.io/examples/application/nginx-with-request.yaml

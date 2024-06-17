@@ -3,7 +3,8 @@
 -- WARNING: This file may contain descructive statements such as DROPs.
 -- Please ensure that you are running the script at the proper location.
 
-CREATE DATABASE click-game charset=utf8mb3;
+CREATE DATABASE IF NOT EXISTS `clicker-game` charset=utf8mb3;
+USE `clicker-game`;
 
 -- BEGIN TABLE accounts
 DROP TABLE IF EXISTS accounts;

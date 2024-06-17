@@ -15,15 +15,18 @@ make push-game stage=local
 make push-redis-client stage=local
 
 make deploy-base-all
+# wait for a minute
 make deploy-app-all
-
-# init mysql
-mysql -h 127.0.0.1 -P 3307 -u root -p1234qwer! clicker-game < clicker-game.sql
 
 # port-forward
 kubectl port-forward svc/mysql -n mysql 3307:3306
 kubectl port-forward svc/login -n login 9001:9001
 kubectl port-forward svc/game -n game 9003:9003
+kubectl port-forward svc/loki-grafana -n loki-stack 3000:80
+
+# init mysql 
+make init-mysql
+
 ```
 
 ### TEST
@@ -44,4 +47,5 @@ go build
 ```bash
 make remove-app-all
 make remove-base-all
+make kind-delete
 ```
